@@ -1,0 +1,57 @@
+<div id="featured">
+    <h1>Featured Categories</h1>
+</div>
+
+<?php
+$categories    = $block->getCategoryCollection();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$helper        = $objectManager->get('\Indaba\FeaturedCat\Helper\Data');
+$length        = 100;
+?>
+
+<?php if ($categories): ?>
+    <div id="fc-owl">
+        <?php foreach ($categories as $category): ?>
+            <?php $count = $helper->getProductCount($category->getId()); ?>
+            <div class="item fc-items">
+                    <?php
+                        $_imgUrl = $helper->getCategoryThumbUrl($category);
+                    ?>
+                    <img src="<?php echo $_imgUrl; ?>" title="<?php echo $category->getName(); ?>" alt="<?php echo $category->getName(); ?>" width="300" height="250" class="image" />
+                    <div class="cat-count">
+                        <a href="<?php echo $helper->getCategoryUrl($category->getId()); ?>"><?php echo $category->getName(); ?> (<?php echo $count; ?>) </a>
+                    </div>
+                    <div class="overlay">
+                        <?php $string = $category->getIndabaShortDescription(); ?>
+                        <div class="text">
+                            <div class="font-small">
+                                <a href="<?php echo $helper->getCategoryUrl($category->getId()); ?>">
+                                    <?php echo (strlen($string) > $length) ? substr($string,0,$length).'...' : $string; ; ?>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<script>
+    require([
+        'jquery',
+        'owlcarousel'
+    ], function () {
+        'use strict';
+        jQuery.noConflict();
+        jQuery("#fc-owl").owlCarousel({
+            autoPlay: 3000, //Set AutoPlay to 3 seconds
+            margin:10,
+            items : 4,
+            itemsDesktop : [1199,3],
+            itemsDesktopSmall : [979,3],
+            navigation : false
+        });
+    });
+</script>
